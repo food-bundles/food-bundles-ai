@@ -1,0 +1,9 @@
+langchain
+langchain-community
+faiss-cpu
+streamlit
+fastapi
+uvicorn
+pytesseract
+pillow
+pymupdf

@@ -1,0 +1,6 @@
+venv/
+__pycache__/
+*.pyc
+vectorstore/
+chrome_langchain_db/
+.env

@@ -1,0 +1,26 @@
+FoodBundles is a food ordering and trading platform that allows customers to order food bundles and traders to manage their accounts and inventory.
+
+## How To Order
+1. Create an account on the FoodBundles platform.
+2. Verify your identity using the Authenticator app or OTP.
+3. Browse available food bundles and select items.
+4. Place your order and choose a payment method.
+5. You can also apply a voucher code at checkout to get a discount.
+
+## Order Now Pay Later (BNPL)
+FoodBundles offers an Order Now Pay Later feature, allowing customers to receive their food bundles immediately and pay at a later date. This is managed through the Loan and Wallet Management system.
+
+## Trader Account
+Traders can register for a Trader Account to list and sell food bundles on the platform. The Trader Dashboard provides an overview of orders, inventory, pricing trends, and earnings.
+
+## Trader Agreement
+Traders must agree to the FoodBundles Trader Agreement before listing products. The agreement outlines the terms of service, pricing policies, and responsibilities of traders on the platform.
+
+## Authentication & Security
+FoodBundles uses two-factor authentication (2FA) via an Authenticator app or OTP (One-Time Password) to secure user accounts. Users must register and verify with the Authenticator during account setup.
+
+## Market Pricing Trends
+The platform provides market pricing trend data to help traders set competitive prices for their food bundles.
+
+## Wallet & Loan Management
+Customers and traders have access to a digital wallet for managing payments, loans, and transactions within the FoodBundles ecosystem.
