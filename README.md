@@ -128,7 +128,7 @@ food-bundles-ai/
 │   ├── __init__.py
 │   ├── agents.py               # Query routing, RAG, API integration
 │   ├── config.py               # App configuration & environment
-│   ├── ingestion.py            # Document ingestion pipeline
+│   ├── ingestion.py            # Document ingestion pipeline (txt, pdf, csv, docx, xlsx, html, xml, pptx, images)
 │   ├── retriever.py            # FAISS vector store retriever
 │   ├── tools.py                # LangChain tools
 │   └── memory.py               # Conversation memory
@@ -141,8 +141,9 @@ food-bundles-ai/
 │   └── index.pkl
 │
 ├── main.py                     # CLI entry point
-├── api.py                      # FastAPI REST endpoint
-├── streamlit_app.py            # Streamlit chat UI
+├── api.py                      # FastAPI REST endpoint (public, rate-limited)
+├── streamlit_app.py            # Admin UI (document upload + re-ingest)
+├── client_app.py               # Public client UI (chat only)
 ├── requirements.txt            # Python dependencies
 ├── Dockerfile                  # Docker image
 ├── docker-compose.yml          # Multi-service Docker setup
@@ -224,7 +225,8 @@ This starts:
 | Service | URL | Description |
 |---|---|---|
 | `ollama` | `http://localhost:11434` | Local LLM server |
-| `streamlit` | `http://localhost:8501` | Chat UI |
+| `streamlit` | `http://localhost:8501` | Admin UI |
+| `client` | `http://localhost:8502` | Public client UI |
 | `api` | `http://localhost:8000` | FastAPI REST endpoint |
 | `ingest` | — | Runs once on startup |
 
@@ -236,13 +238,27 @@ docker exec -it foodbundles_ollama bash pull_models.sh
 
 ## 🖥️ Usage
 
-### Chat UI
+### Chat UI (Public)
+
+Visit `http://localhost:8502` to chat with the AI assistant.
+
+### Admin UI
 
 Visit `http://localhost:8501` to:
 
 - Ask questions about FoodBundles features
 - Upload new documents to expand the knowledge base
 - Click **Re-ingest** after uploading to update the AI
+
+### Supported File Types for Upload
+
+| Type | Extensions |
+|---|---|
+| Text | `.txt`, `.md` |
+| Documents | `.pdf`, `.docx`, `.pptx` |
+| Spreadsheets | `.csv`, `.xlsx` |
+| Web | `.html`, `.xml` |
+| Images (OCR) | `.jpg`, `.jpeg`, `.png`, `.bmp`, `.tiff`, `.webp` |
 
 ### CLI
 

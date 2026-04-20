@@ -23,6 +23,7 @@ services:
       - vectorstore_data:/app/vectorstore
     environment:
       - OLLAMA_HOST=http://ollama:11434
+      - TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata
     depends_on:
       ollama:
         condition: service_healthy
@@ -30,7 +31,7 @@ services:
 
   streamlit:
     build: .
-    container_name: foodbundles_ui
+    container_name: foodbundles_admin_ui
     command: streamlit run streamlit_app.py --server.port=8501 --server.address=0.0.0.0
     ports:
       - "8501:8501"
@@ -39,6 +40,23 @@ services:
       - vectorstore_data:/app/vectorstore
     environment:
       - OLLAMA_HOST=http://ollama:11434
+      - TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata
+    depends_on:
+      - ingest
+    restart: unless-stopped
+
+  client:
+    build: .
+    container_name: foodbundles_client_ui
+    command: streamlit run client_app.py --server.port=8502 --server.address=0.0.0.0
+    ports:
+      - "8502:8502"
+    volumes:
+      - ./data:/app/data
+      - vectorstore_data:/app/vectorstore
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+      - TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata
     depends_on:
       - ingest
     restart: unless-stopped
@@ -54,6 +72,7 @@ services:
       - vectorstore_data:/app/vectorstore
     environment:
       - OLLAMA_HOST=http://ollama:11434
+      - TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata
     depends_on:
       - ingest
     restart: unless-stopped
