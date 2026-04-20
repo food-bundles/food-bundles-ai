@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from agents import run_agent
+from src.agents import run_agent
 
 app = FastAPI()
 

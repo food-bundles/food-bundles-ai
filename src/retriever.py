@@ -1,6 +1,6 @@
 from langchain_community.vectorstores import FAISS
 from langchain_ollama import OllamaEmbeddings
-from config import config
+from src.config import config
 
 
 def get_retriever():

@@ -1,8 +1,8 @@
 import os
 import shutil
 import streamlit as st
-from agents import run_agent
-from ingestion import ingest
+from src.agents import run_agent
+from src.ingestion import ingest
 
 st.set_page_config(page_title="FoodBundles AI Agent", page_icon="🍱", layout="wide")
 
