@@ -1,23 +1,23 @@
 import os
 import shutil
 import streamlit as st
-from agents import run_agent
-from ingestion import ingest
+from src.agents import run_agent
+from src.ingestion import ingest
 
-st.set_page_config(page_title="FoodBundles AI Agent", page_icon="🍱", layout="wide")
+st.set_page_config(page_title="FoodBundles Admin — AI Agent", page_icon="⚙️", layout="wide")
 
 # --- Sidebar ---
 with st.sidebar:
-    st.image("https://img.icons8.com/fluency/96/meal.png", width=64)
+    st.image("https://res.cloudinary.com/dzxyelclu/image/upload/v1760111270/Food_bundle_logo_cfsnsw.png", width=64)
     st.title("FoodBundles AI")
-    st.caption("Powered by Ollama + RAG")
     st.divider()
 
     st.subheader("📂 Upload Documents")
     uploaded_files = st.file_uploader(
-        "Upload .txt files to the knowledge base",
-        type=["txt", "pdf", "csv"],
+        "Upload new files (.txt, .md, .pdf, .png, etc.) to the knowledge base",
+        type=["txt", "md", "pdf", "csv", "docx", "xlsx", "html", "xml", "pptx", "jpg", "jpeg", "png", "bmp", "tiff", "webp"],
         accept_multiple_files=True,
+        key=st.session_state.get("uploader_key", "uploader_0"),
     )
 
     if uploaded_files:
@@ -34,13 +34,15 @@ with st.sidebar:
             with st.spinner("Ingesting documents..."):
                 ingest()
             st.success(f"✅ Ingested: {', '.join(saved)}")
+            # Reset uploader by changing its key
+            st.session_state["uploader_key"] = f"uploader_{len(saved)}_{saved[0]}"
+            st.rerun()
 
     st.divider()
-    st.caption("Documents stored in `/data` are used for RAG retrieval.")
 
 # --- Main Chat UI ---
-st.title("🍱 FoodBundles AI Assistant")
-st.caption("Ask me anything about FoodBundles — ordering, payments, trader accounts, and more.")
+st.title("⚙️ FoodBundles Admin — AI Agent")
+st.caption("Admin panel for managing the knowledge base and testing the AI agent.")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []

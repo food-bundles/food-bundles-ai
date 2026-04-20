@@ -4,3 +4,4 @@ __pycache__/
 vectorstore/
 chrome_langchain_db/
 .env
+data/.ocr_cache.json

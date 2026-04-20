@@ -7,3 +7,6 @@ uvicorn
 pytesseract
 pillow
 pymupdf
+docx2txt
+unstructured
+openpyxl

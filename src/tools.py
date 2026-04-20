@@ -1,5 +1,5 @@
 from langchain.tools import tool
-from retriever import get_retriever
+from src.retriever import get_retriever
 
 @tool
 def search_documents(query: str) -> str:

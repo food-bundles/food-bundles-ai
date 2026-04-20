@@ -1,7 +1,7 @@
 from langchain_ollama import ChatOllama
 from langchain_core.messages import SystemMessage, HumanMessage, AIMessage
-from retriever import get_retriever
-from config import config
+from src.retriever import get_retriever
+from src.config import config
 import requests
 import json
 
