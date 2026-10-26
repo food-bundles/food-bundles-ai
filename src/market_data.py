@@ -26,7 +26,7 @@ def _all_files() -> list:
 
 
 def _parse_file(filepath: str) -> dict:
-    prices = {name: [] for name in COMMODITIES.values()}
+    prices: dict[str, list[float]] = {name: [] for name in COMMODITIES.values()}
     try:
         wb = openpyxl.load_workbook(filepath, read_only=True, data_only=True)
         ws = wb.active
@@ -61,7 +61,7 @@ def get_market_summary() -> str:
         return _cache
 
     # Merge prices across all files for full historical context
-    merged = {name: [] for name in COMMODITIES.values()}
+    merged: dict[str, list[float]] = {name: [] for name in COMMODITIES.values()}
     for filepath in files:
         file_prices = _parse_file(filepath)
         for commodity, vals in file_prices.items():

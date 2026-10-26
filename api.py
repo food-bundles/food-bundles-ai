@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, HTTPException, Depends
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from pydantic import BaseModel
@@ -7,7 +7,6 @@ from typing import Optional, AsyncGenerator
 from src.agents import run_agent, run_market_agent, run_support_agent, run_assistance_agent, is_sensitive_query, stream_agent, stream_market_agent, stream_support_agent, stream_assistance_agent
 from src.config import config
 import time
-import asyncio
 import json
 
 app = FastAPI(
@@ -29,6 +28,10 @@ app.add_middleware(
 RATE_LIMIT = 60
 RATE_WINDOW = 60
 _request_counts: dict = defaultdict(list)
+
+
+def _get_client_ip(request: Request) -> str:
+    return request.client.host if request.client else "unknown"
 
 
 def check_rate_limit(ip: str):
@@ -72,7 +75,7 @@ def health():
 # --- Legacy public endpoints ---
 @app.get("/query", tags=["Chat"])
 def query_get(q: str, request: Request):
-    check_rate_limit(request.client.host)
+    check_rate_limit(_get_client_ip(request))
     if is_sensitive_query(q):
         return JSONResponse(status_code=403, content={"error": "Restricted content.", "platform_url": config.public_url})
     return QueryResponse(answer=run_agent(q))
@@ -80,7 +83,7 @@ def query_get(q: str, request: Request):
 
 @app.post("/query", tags=["Chat"])
 def query_post(body: QueryRequest, request: Request):
-    check_rate_limit(request.client.host)
+    check_rate_limit(_get_client_ip(request))
     if is_sensitive_query(body.question):
         return JSONResponse(status_code=403, content={"error": "Restricted content.", "platform_url": config.public_url})
     return QueryResponse(answer=run_agent(body.question, body.history))
@@ -90,7 +93,7 @@ def query_post(body: QueryRequest, request: Request):
 
 @app.post("/mobile/restaurant/chat", tags=["Mobile Restaurant — AI Chat"])
 def mobile_chat(body: AuthenticatedQueryRequest, request: Request):
-    check_rate_limit(request.client.host)
+    check_rate_limit(_get_client_ip(request))
     if is_sensitive_query(body.question):
         return JSONResponse(status_code=403, content={"error": "Restricted content.", "platform_url": config.public_url})
     answer = run_agent(body.question, body.history, user_id=body.user_id, role=body.role)
@@ -99,7 +102,7 @@ def mobile_chat(body: AuthenticatedQueryRequest, request: Request):
 
 @app.post("/mobile/restaurant/market-intelligence", tags=["Mobile Restaurant — Market Intelligence"])
 def mobile_market_intelligence(body: AuthenticatedQueryRequest, request: Request):
-    check_rate_limit(request.client.host)
+    check_rate_limit(_get_client_ip(request))
     if is_sensitive_query(body.question):
         return JSONResponse(status_code=403, content={"error": "Restricted content.", "platform_url": config.public_url})
     answer = run_market_agent(body.question, body.history, user_id=body.user_id, role=body.role)
@@ -108,7 +111,7 @@ def mobile_market_intelligence(body: AuthenticatedQueryRequest, request: Request
 
 @app.post("/mobile/restaurant/support", tags=["Mobile Restaurant — Support Chat"])
 def mobile_support(body: AuthenticatedQueryRequest, request: Request):
-    check_rate_limit(request.client.host)
+    check_rate_limit(_get_client_ip(request))
     if is_sensitive_query(body.question):
         return JSONResponse(status_code=403, content={"error": "Restricted content.", "platform_url": config.public_url})
     answer = run_support_agent(body.question, body.history, user_id=body.user_id, role=body.role)
@@ -117,7 +120,7 @@ def mobile_support(body: AuthenticatedQueryRequest, request: Request):
 
 @app.post("/mobile/restaurant/assistance", tags=["Mobile Restaurant — AI Assistance"])
 def mobile_assistance(body: AuthenticatedQueryRequest, request: Request):
-    check_rate_limit(request.client.host)
+    check_rate_limit(_get_client_ip(request))
     if is_sensitive_query(body.question):
         return JSONResponse(status_code=403, content={"error": "Restricted content.", "platform_url": config.public_url})
     answer = run_assistance_agent(body.question, body.history, user_id=body.user_id, role=body.role, context_data=body.context)
@@ -139,7 +142,7 @@ async def _sse_stream(gen) -> AsyncGenerator[str, None]:
 @app.post("/mobile/restaurant/chat/stream", tags=["Mobile Restaurant — AI Chat"])
 def mobile_chat_stream(body: AuthenticatedQueryRequest, request: Request):
     """SSE streaming version of /mobile/restaurant/chat."""
-    check_rate_limit(request.client.host)
+    check_rate_limit(_get_client_ip(request))
     if is_sensitive_query(body.question):
         return JSONResponse(status_code=403, content={"error": "Restricted content."})
     gen = stream_agent(body.question, body.history, user_id=body.user_id, role=body.role)
@@ -149,7 +152,7 @@ def mobile_chat_stream(body: AuthenticatedQueryRequest, request: Request):
 @app.post("/mobile/restaurant/market-intelligence/stream", tags=["Mobile Restaurant — Market Intelligence"])
 def mobile_market_intelligence_stream(body: AuthenticatedQueryRequest, request: Request):
     """SSE streaming version of /mobile/restaurant/market-intelligence."""
-    check_rate_limit(request.client.host)
+    check_rate_limit(_get_client_ip(request))
     if is_sensitive_query(body.question):
         return JSONResponse(status_code=403, content={"error": "Restricted content."})
     gen = stream_market_agent(body.question, body.history, user_id=body.user_id, role=body.role)
@@ -159,7 +162,7 @@ def mobile_market_intelligence_stream(body: AuthenticatedQueryRequest, request: 
 @app.post("/mobile/restaurant/support/stream", tags=["Mobile Restaurant — Support Chat"])
 def mobile_support_stream(body: AuthenticatedQueryRequest, request: Request):
     """SSE streaming version of /mobile/restaurant/support."""
-    check_rate_limit(request.client.host)
+    check_rate_limit(_get_client_ip(request))
     if is_sensitive_query(body.question):
         return JSONResponse(status_code=403, content={"error": "Restricted content."})
     gen = stream_support_agent(body.question, body.history, user_id=body.user_id, role=body.role)
@@ -169,7 +172,7 @@ def mobile_support_stream(body: AuthenticatedQueryRequest, request: Request):
 @app.post("/mobile/restaurant/assistance/stream", tags=["Mobile Restaurant — AI Assistance"])
 def mobile_assistance_stream(body: AuthenticatedQueryRequest, request: Request):
     """SSE streaming version of /mobile/restaurant/assistance."""
-    check_rate_limit(request.client.host)
+    check_rate_limit(_get_client_ip(request))
     if is_sensitive_query(body.question):
         return JSONResponse(status_code=403, content={"error": "Restricted content."})
     gen = stream_assistance_agent(body.question, body.history, user_id=body.user_id, role=body.role, context_data=body.context)

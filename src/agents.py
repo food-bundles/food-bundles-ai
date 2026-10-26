@@ -128,7 +128,7 @@ def _get_rag_context(query: str) -> str:
 
 def run_agent(
     query: str,
-    history: list = None,
+    history: Optional[list] = None,
     user_id: Optional[str] = None,
     role: Optional[str] = None,
 ) -> str:
@@ -163,7 +163,7 @@ def _user_context_str(user_id: Optional[str], role: Optional[str]) -> str:
 
 def run_market_agent(
     query: str,
-    history: list = None,
+    history: Optional[list] = None,
     user_id: Optional[str] = None,
     role: Optional[str] = None,
 ) -> str:
@@ -190,7 +190,7 @@ def run_market_agent(
 
 def run_support_agent(
     query: str,
-    history: list = None,
+    history: Optional[list] = None,
     user_id: Optional[str] = None,
     role: Optional[str] = None,
 ) -> str:
@@ -216,7 +216,7 @@ def run_support_agent(
 
 def run_assistance_agent(
     query: str,
-    history: list = None,
+    history: Optional[list] = None,
     user_id: Optional[str] = None,
     role: Optional[str] = None,
     context_data: Optional[dict] = None,
@@ -244,7 +244,7 @@ def run_assistance_agent(
 
 def stream_agent(
     query: str,
-    history: list = None,
+    history: Optional[list] = None,
     user_id: Optional[str] = None,
     role: Optional[str] = None,
 ) -> Generator[str, None, None]:
@@ -274,7 +274,7 @@ def stream_agent(
 
 def stream_market_agent(
     query: str,
-    history: list = None,
+    history: Optional[list] = None,
     user_id: Optional[str] = None,
     role: Optional[str] = None,
 ) -> Generator[str, None, None]:
@@ -303,7 +303,7 @@ def stream_market_agent(
 
 def stream_support_agent(
     query: str,
-    history: list = None,
+    history: Optional[list] = None,
     user_id: Optional[str] = None,
     role: Optional[str] = None,
 ) -> Generator[str, None, None]:
@@ -331,7 +331,7 @@ def stream_support_agent(
 
 def stream_assistance_agent(
     query: str,
-    history: list = None,
+    history: Optional[list] = None,
     user_id: Optional[str] = None,
     role: Optional[str] = None,
     context_data: Optional[dict] = None,
