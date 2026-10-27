@@ -25,6 +25,8 @@ services:
       - vectorstore_data:/app/vectorstore
     environment:
       - OLLAMA_HOST=http://ollama:11434
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.2}
+      - OLLAMA_EMBEDDING_MODEL=${OLLAMA_EMBEDDING_MODEL:-nomic-embed-text}
       - TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata
     depends_on:
       ollama:
@@ -78,8 +80,13 @@ services:
     environment:
       - OLLAMA_HOST=http://ollama:11434
       - TESSDATA_PREFIX=/usr/share/tesseract-ocr/5/tessdata
+      - OLLAMA_MODEL=${OLLAMA_MODEL:-llama3.2}
+      - OLLAMA_EMBEDDING_MODEL=${OLLAMA_EMBEDDING_MODEL:-nomic-embed-text}
+      - BACKEND_URL=${BACKEND_URL:-http://localhost:4000}
+      - AI_SERVICE_SECRET=${AI_SERVICE_SECRET}
     depends_on:
-      - ingest
+      ollama:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:

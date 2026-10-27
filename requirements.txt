@@ -4,6 +4,7 @@ httpx
 python-dotenv
 pydantic
 openpyxl
+streamlit
 
 # RAG / vectorstore (for ingestion and retrieval)
 langchain
