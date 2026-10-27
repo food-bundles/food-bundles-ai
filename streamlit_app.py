@@ -1,5 +1,4 @@
 import os
-import shutil
 import streamlit as st
 from src.agents import run_agent
 from src.ingestion import ingest
